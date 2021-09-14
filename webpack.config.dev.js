@@ -1,6 +1,8 @@
 const path = require("path");
+const glob = require("glob");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const PurgecssWebpackPlugin = require("purgecss-webpack-plugin");
 
 const webpackConfig = {
     mode: "development",
@@ -33,6 +35,7 @@ const webpackConfig = {
                     { loader: MiniCssExtractPlugin.loader },
                     "css-loader",
                     "sass-loader",
+                    "postcss-loader",
                 ]
             },
             {
@@ -59,6 +62,9 @@ const webpackConfig = {
         }),
         new MiniCssExtractPlugin({
             filename: "assets/[name].css"
+        }),
+        new PurgecssWebpackPlugin({
+            paths: glob.sync(`${path.join(__dirname, "src")}/**/*`, { nodir: true }),
         })
     ]
 };
