@@ -1,11 +1,10 @@
 import React from "react";
-import "../assets/stylesheets/styles.css";
 
 const Home = () => {
     return (
         <>
-            <h1>Home</h1>
-            <p>
+            <h1 className="bg-blue-900">Home</h1>
+            <p className="text-red-400">
                 Página del "home"
             </p>
         </>
