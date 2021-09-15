@@ -1,5 +1,6 @@
 const path = require("path");
 const glob = require("glob");
+const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const PurgecssWebpackPlugin = require("purgecss-webpack-plugin");
@@ -63,6 +64,7 @@ module.exports = (env, argv) => ({
         historyApiFallback: true
     },
     plugins: [
+        new webpack.ProgressPlugin(),
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
             template: "./public/index.html",
