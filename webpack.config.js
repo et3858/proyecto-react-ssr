@@ -5,7 +5,14 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const PurgecssWebpackPlugin = require("purgecss-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
-const webpackConfig = {
+/**
+ * Checks if 'mode' for building the app is "development"
+ * @param  {object} mode [Only takes the 'mode' field]
+ * @return {bool}
+ */
+const isDev = ({ mode }) => mode === "development";
+
+module.exports = (env, argv) => ({
     entry: "./src/index.js",
     output: {
         path: path.resolve(__dirname, "dist"),
@@ -30,7 +37,7 @@ const webpackConfig = {
                 }
             },
             {
-                test: /\.(s?css|sass)$/,
+                test: /\.(sa|sc|c)ss$/,
                 use: [
                     { loader: MiniCssExtractPlugin.loader },
                     "css-loader",
@@ -62,12 +69,10 @@ const webpackConfig = {
             filename: "./index.html"
         }),
         new MiniCssExtractPlugin({
-            filename: "assets/[name].css"
+            filename: isDev(argv) ? "assets/[name].css" : "assets/[name]-[fullhash].css"
         }),
         new PurgecssWebpackPlugin({
             paths: glob.sync(`${path.join(__dirname, "src")}/**/*`, { nodir: true }),
-        })
+        }),
     ]
-};
-
-module.exports = webpackConfig;
+});
