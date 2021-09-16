@@ -2,12 +2,12 @@ import React from "react";
 
 const Home = () => {
     return (
-        <>
-            <h1>Contact</h1>
+        <section className="p-2">
+            <h1 className="text-2xl pb-2 font-bold">Contact</h1>
             <p>
                 Página de contacto
             </p>
-        </>
+        </section>
     );
 };
 

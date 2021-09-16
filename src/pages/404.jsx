@@ -2,10 +2,10 @@ import React from "react";
 
 const Home = (props) => {
     return (
-        <>
-            <h1>Error 404</h1>
-            <p>
-                No se encuentra la página
+        <section className="p-2 text-center">
+            <h1 className="text-6xl font-bold py-6">Error 404</h1>
+            <p className="py-2">
+                No se encuentró la página
             </p>
             <p>
                 <button
@@ -15,7 +15,7 @@ const Home = (props) => {
                     Volver a la página anterior
                 </button>
             </p>
-        </>
+        </section>
     );
 };
 
