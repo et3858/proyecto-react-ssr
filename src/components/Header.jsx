@@ -3,22 +3,15 @@ import { Link } from "react-router-dom";
 
 const Header = () => {
     return (
-        <header>
-            <nav>
-                <ul>
-                    <li>
-                        <Link to="/">Home</Link>
-                    </li>
-                    <li>
-                        <Link to="/about">About</Link>
-                    </li>
-                    <li>
-                        <Link to="/services">Services</Link>
-                    </li>
-                    <li>
-                        <Link to="/contact">Contact</Link>
-                    </li>
-                </ul>
+        <header className="bg-purple-500 text-white">
+            <nav className="p-2 flex justify-between items-center">
+                <Link to="/" className="text-xl">Home</Link>
+
+                <div className="flex space-x-4">
+                    <Link to="/about">About</Link>
+                    <Link to="/services">Services</Link>
+                    <Link to="/contact">Contact</Link>
+                </div>
             </nav>
         </header>
     );
