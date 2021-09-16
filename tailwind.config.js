@@ -1,9 +1,13 @@
+require("dotenv").config();
 
 const tailwindCssConfig = {
-    purge: [
-        "./src/**/*.html",
-        "./src/**/*.{js|jsx|ts|tsx}",
-    ],
+    purge: {
+        layers: ["components", "utilities"],
+        content: [
+            "./dist/**/*.html",
+            "./dist/**/*.js",
+        ],
+    },
     darkMode: false, // or 'media' or 'class'
     theme: {
         extend: {},
