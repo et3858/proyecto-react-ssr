@@ -1,9 +1,7 @@
 const path = require("path");
-const glob = require("glob");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const PurgecssWebpackPlugin = require("purgecss-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 /**
@@ -72,9 +70,6 @@ module.exports = (env, argv) => ({
         }),
         new MiniCssExtractPlugin({
             filename: isDev(argv) ? "assets/[name].css" : "assets/[name]-[fullhash].css"
-        }),
-        new PurgecssWebpackPlugin({
-            paths: glob.sync(`${path.join(__dirname, "src")}/**/*`, { nodir: true }),
         }),
     ]
 });
