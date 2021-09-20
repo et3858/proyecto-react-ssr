@@ -4,18 +4,23 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
-/**
- * Checks if 'mode' for building the app is "development"
- * @param  {object} mode [Only takes the 'mode' field]
- * @return {bool}
- */
-const isDev = ({ mode }) => mode === "development";
+require("dotenv").config();
 
-module.exports = (env, argv) => ({
-    entry: "./src/index.js",
+const noop = () => {};
+const isDev = (process.env.NODE_ENV === "development");
+const entry = ["./src/client/index.js"];
+
+if (isDev) {
+    entry.push("webpack-hot-middleware/client?path=/__webpack_hmr&timeout=2000&reload=true");
+}
+
+module.exports = {
+    entry,
+    mode: process.env.NODE_ENV,
     output: {
-        path: path.resolve(__dirname, "dist"),
-        filename: "bundle.js"
+        path: path.resolve(__dirname, "src/server/public"),
+        filename: isDev ? "assets/bundle.js" : "assets/bundle-[fullhash].js",
+        publicPath: "/"
     },
     resolve: {
         extensions: [".js", ".jsx"]
@@ -63,13 +68,14 @@ module.exports = (env, argv) => ({
     },
     plugins: [
         new webpack.ProgressPlugin(),
-        new CleanWebpackPlugin(),
-        new HtmlWebpackPlugin({
-            template: "./public/index.html",
-            filename: "./index.html"
-        }),
+        new webpack.HotModuleReplacementPlugin(),
+        // new CleanWebpackPlugin(),
+        // new HtmlWebpackPlugin({
+        //     template: "./public/index.html",
+        //     filename: "./index.html"
+        // }),
         new MiniCssExtractPlugin({
-            filename: isDev(argv) ? "assets/[name].css" : "assets/[name]-[fullhash].css"
+            filename: isDev ? "assets/[name].css" : "assets/[name]-[fullhash].css"
         }),
     ]
-});
+};

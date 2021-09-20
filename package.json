@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "webpack --mode development --config webpack.config.js",
     "build": "webpack --mode production --config webpack.config.js",
-    "start": "webpack-dev-server --open --mode development"
+    "start": "nodemon src/server/index"
   },
   "keywords": [],
   "author": "Eduardo Tejada Frost",
