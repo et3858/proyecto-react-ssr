@@ -2,6 +2,8 @@ const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
+const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 require("dotenv").config();
@@ -24,6 +26,30 @@ module.exports = {
     },
     resolve: {
         extensions: [".js", ".jsx"]
+    },
+    optimization: {
+        minimize: !isDev,
+        minimizer: [new TerserPlugin()],
+        splitChunks: {
+            chunks: "async",
+            cacheGroups: {
+                vendors: {
+                    name: "vendors",
+                    chunks: "all",
+                    reuseExistingChunk: true,
+                    priority: 1,
+                    filename: isDev ? "assets/vendor.js" : "assets/vendor-[fullhash].js",
+                    enforce: true,
+                    test: /[\\/]node_modules[\\/]/,
+                    // test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+
+                    // test(module, chunks) {
+                    //     const name = module.nameForCondition && module.nameForCondition();
+                    //     return chunks.some(chunk => chunk.name !== "vendors" && /[\\/]node_modules[\\/]/.test(name))
+                    // }
+                }
+            }
+        }
     },
     module: {
         rules: [
@@ -68,8 +94,9 @@ module.exports = {
     },
     plugins: [
         new webpack.ProgressPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
-        // new CleanWebpackPlugin(),
+        new CleanWebpackPlugin(),
+        isDev ? new webpack.HotModuleReplacementPlugin() : noop,
+        isDev ? noop : new WebpackManifestPlugin(),
         // new HtmlWebpackPlugin({
         //     template: "./public/index.html",
         //     filename: "./index.html"

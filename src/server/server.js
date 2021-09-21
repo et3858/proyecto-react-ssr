@@ -10,6 +10,7 @@ import { renderRoutes } from "react-router-config";
 import { StaticRouter } from "react-router-dom";
 import serverRoutes from "../client/routes/routes";
 import Layout from "../client/components/Layout";
+import getManifest from "./getManifest";
 
 dotenv.config();
 
@@ -34,6 +35,7 @@ if (NODE_ENV === "development") {
     console.log("Production config");
 
     app.use((req, res, next) => {
+        if (!req.hashManifest) req.hashManifest = getManifest();
         next();
     });
 
@@ -43,11 +45,10 @@ if (NODE_ENV === "development") {
     app.disable("x-powered-by");
 }
 
-const setResponse = (html) => {
-    const mainStyles = "assets/main.css";
-    const mainBuild = "assets/bundle.js";
-    const vendorBuild = "assets/vendor.js";
-    // <script src="${vendorBuild}" type="text/javascript"></script>
+const setResponse = (html, manifest) => {
+    const mainStyles = manifest ? manifest["main.css"] : "assets/main.css";
+    const mainBuild = manifest ? manifest["main.js"] : "assets/bundle.js";
+    const vendorBuild = manifest ? manifest["vendors.js"] :  "assets/vendor.js";
 
     // read `index.html` file
     let indexHTML = fs.readFileSync(path.resolve(__dirname, "../../public/index.html"), {
@@ -65,7 +66,8 @@ const setResponse = (html) => {
     indexHTML = indexHTML.replace(
         "<div id=\"app\"></div>",
         `<div id="app">${html}</div>
-        <script src="${mainBuild}" type="text/javascript"></script>`
+        <script src="${mainBuild}" type="text/javascript"></script>
+        <script src="${vendorBuild}" type="text/javascript"></script>`
     );
 
     return indexHTML;
@@ -98,7 +100,7 @@ const renderApp = (req, res) => {
         </StaticRouter>
     );
 
-    res.send(setResponse(html));
+    res.send(setResponse(html, req.hashManifest));
 };
 
 app.get("*", renderApp);
