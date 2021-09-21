@@ -1,6 +1,6 @@
 import React from "react";
 
-const Home = () => {
+const Contact = () => {
     return (
         <section className="p-2">
             <h1 className="text-2xl pb-2 font-bold">Contact</h1>
@@ -11,4 +11,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default Contact;

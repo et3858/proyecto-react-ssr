@@ -1,6 +1,6 @@
 import React from "react";
 
-const Home = (props) => {
+const NotFound = (props) => {
     return (
         <section className="p-2 text-center">
             <h1 className="text-6xl font-bold py-6">Error 404</h1>
@@ -19,4 +19,4 @@ const Home = (props) => {
     );
 };
 
-export default Home;
+export default NotFound;
