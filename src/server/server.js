@@ -7,6 +7,7 @@ import { renderToString } from "react-dom/server";
 import { renderRoutes } from "react-router-config";
 import { StaticRouter } from "react-router-dom";
 import serverRoutes from "../client/routes/routes";
+import Layout from "../client/components/Layout";
 
 dotenv.config();
 
@@ -64,15 +65,19 @@ const setResponse = (html) => {
     `);
 };
 
-app.get("*", (req, res) => {
+const renderApp = (req, res) => {
     const html = renderToString(
         <StaticRouter location={req.url} context={{}}>
-            {renderRoutes(serverRoutes)}
+            <Layout>
+                {renderRoutes(serverRoutes)}
+            </Layout>
         </StaticRouter>
     );
 
     res.send(setResponse(html));
-});
+};
+
+app.get("*", renderApp);
 
 app.listen(PORT, (err) => {
     if (err) console.log(err);
