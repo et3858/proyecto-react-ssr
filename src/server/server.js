@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import express from "express";
 import dotenv from "dotenv";
 import webpack from "webpack";
@@ -47,22 +49,44 @@ const setResponse = (html) => {
     const vendorBuild = "assets/vendor.js";
     // <script src="${vendorBuild}" type="text/javascript"></script>
 
-    return (`
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <link rel="stylesheet" href="${mainStyles}" type="text/css">
-            <title>Proyecto React con SSR</title>
-        </head>
-        <body>
-            <div id="app">${html}</div>
-            <script src="${mainBuild}" type="text/javascript"></script>
-        </body>
-        </html>
-    `);
+    // read `index.html` file
+    let indexHTML = fs.readFileSync(path.resolve(__dirname, "../../public/index.html"), {
+        encoding: 'utf8',
+    });
+
+    // Add css reference
+    indexHTML = indexHTML.replace(
+        "<title>",
+        `<link rel="stylesheet" href="${mainStyles}" type="text/css">
+        <title>`
+    );
+
+    // Add js references
+    indexHTML = indexHTML.replace(
+        "<div id=\"app\"></div>",
+        `<div id="app">${html}</div>
+        <script src="${mainBuild}" type="text/javascript"></script>`
+    );
+
+    return indexHTML;
+
+    // return (`
+    //     <!DOCTYPE html>
+    //     <html lang="en">
+    //     <head>
+    //         <meta charset="UTF-8">
+    //         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    //         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    //         <link rel="stylesheet" href="${mainStyles}" type="text/css">
+    //         <title>Proyecto React con SSR</title>
+    //     </head>
+    //     <body>
+    //         <div id="app">${html}</div>
+    //         <script src="${mainBuild}" type="text/javascript"></script>
+    //         <script src="${vendorBuild}" type="text/javascript"></script>
+    //     </body>
+    //     </html>
+    // `);
 };
 
 const renderApp = (req, res) => {
