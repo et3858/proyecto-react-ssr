@@ -1,6 +1,5 @@
 const path = require("path");
 const webpack = require("webpack");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
@@ -102,10 +101,6 @@ module.exports = {
             filename: "[base].gz",
         }),
         isDev ? noop : new WebpackManifestPlugin(),
-        // new HtmlWebpackPlugin({
-        //     template: "./public/index.html",
-        //     filename: "./index.html"
-        // }),
         new MiniCssExtractPlugin({
             filename: isDev ? "assets/[name].css" : "assets/[name]-[fullhash].css"
         }),
