@@ -3,6 +3,7 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const CompressionWebpackPlugin = require("compression-webpack-plugin");
 const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
@@ -96,6 +97,10 @@ module.exports = {
         new webpack.ProgressPlugin(),
         new CleanWebpackPlugin(),
         isDev ? new webpack.HotModuleReplacementPlugin() : noop,
+        isDev ? noop : new CompressionWebpackPlugin({
+            test: /\.(css|js)$/,
+            filename: "[base].gz",
+        }),
         isDev ? noop : new WebpackManifestPlugin(),
         // new HtmlWebpackPlugin({
         //     template: "./public/index.html",
