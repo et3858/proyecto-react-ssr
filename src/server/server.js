@@ -18,22 +18,18 @@ const { NODE_ENV, PORT } = process.env;
 const app = express();
 
 if (NODE_ENV === "development") {
-    console.log("Development config");
-
     const webpackConfig = require("../../webpack.config");
     const webpackDevMiddleware = require("webpack-dev-middleware");
     const webpackHotMiddleware = require("webpack-hot-middleware");
     const compiler = webpack(webpackConfig);
     const serverConfig = {
-        port: PORT,
-        // hot: true
+        serverSideRender: true,
+        publicPath: webpackConfig.output.publicPath
     };
 
-    app.use(webpackDevMiddleware(compiler));
+    app.use(webpackDevMiddleware(compiler, serverConfig));
     app.use(webpackHotMiddleware(compiler));
 } else {
-    console.log("Production config");
-
     app.use((req, res, next) => {
         if (!req.hashManifest) req.hashManifest = getManifest();
         next();
@@ -71,24 +67,6 @@ const setResponse = (html, manifest) => {
     );
 
     return indexHTML;
-
-    // return (`
-    //     <!DOCTYPE html>
-    //     <html lang="en">
-    //     <head>
-    //         <meta charset="UTF-8">
-    //         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    //         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    //         <link rel="stylesheet" href="${mainStyles}" type="text/css">
-    //         <title>Proyecto React con SSR</title>
-    //     </head>
-    //     <body>
-    //         <div id="app">${html}</div>
-    //         <script src="${mainBuild}" type="text/javascript"></script>
-    //         <script src="${vendorBuild}" type="text/javascript"></script>
-    //     </body>
-    //     </html>
-    // `);
 };
 
 const renderApp = (req, res) => {
