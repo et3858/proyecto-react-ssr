@@ -41,12 +41,6 @@ module.exports = {
                     filename: isDev ? "assets/vendor.js" : "assets/vendor-[fullhash].js",
                     enforce: true,
                     test: /[\\/]node_modules[\\/]/,
-                    // test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
-
-                    // test(module, chunks) {
-                    //     const name = module.nameForCondition && module.nameForCondition();
-                    //     return chunks.some(chunk => chunk.name !== "vendors" && /[\\/]node_modules[\\/]/.test(name))
-                    // }
                 }
             }
         }
@@ -94,7 +88,7 @@ module.exports = {
     },
     plugins: [
         new webpack.ProgressPlugin(),
-        new CleanWebpackPlugin(),
+        isDev ? noop : new CleanWebpackPlugin(),
         isDev ? new webpack.HotModuleReplacementPlugin() : noop,
         isDev ? noop : new CompressionWebpackPlugin({
             test: /\.(css|js)$/,
